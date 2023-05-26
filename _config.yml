@@ -123,3 +123,7 @@ menu_title: hupy~
 
 # URL of the Home page image
 index_cover: /img/home-bg.jpg
+
+# Social Accounts
+twitter_url: https://twitter.com/dearhupy
+github_url: https://github.com/peiyaohu/peiyaohu.github.io
