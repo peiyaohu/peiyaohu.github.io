@@ -1,13 +1,16 @@
 ---
 title: RNA-seq
 date: 2023-05-29 10:16:18
+
 tags: NGS; RNA-seq; pipeline
 ---
 
+## 1. Prepare
+
+### a. Create dir and download rawseq && public source 
+
 ```sh
 #!/bin/bash
-
-############### Create dir and download rawseq && public source ##############
 mcd() { mkdir "$@" 2> >(sed s/mkdir/mcd/ 1>&2) && cd "$_"; }
 ### Create working dir:
 work_dir=/public/home/pyhu/project/xjw/immunity_mut_RNA_seq
@@ -21,8 +24,13 @@ mkdir 0_Results 2_script 3_source
 
 ### PE data are saved at:
 seq_dir=/public/home/pyhu/project/xjw/immunity_mut_RNA_seq/rawSeq
+```
 
-### download Public source:
+
+
+### b. Download public source
+
+```sh
 # create a sub_dir to save public data source and extract downloads (some extracting-scripts are neglected).
 cd 3_source; mcd OsativaKitaake
 # Downloads info: Transcriptome and hard-masked genome of Kitaake_499 from JGI.
@@ -34,15 +42,27 @@ cd ..; mcd OsNip_release56
 wget https://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/fasta/oryza_sativa/cdna/Oryza_sativa.IRGSP-1.0.cdna.all.fa.gz
 wget https://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/gtf/oryza_sativa/Oryza_sativa.IRGSP-1.0.56.gtf.gz
 wget https://ftp.ensemblgenomes.ebi.ac.uk/pub/plants/release-56/fasta/oryza_sativa/dna/Oryza_sativa.IRGSP-1.0.dna_rm.toplevel.fa.gz
+```
 
-################ RNA-seq quantification using Salmon (v.1.4.0) #############
+
+
+## 2. RNA-seq quantification using Salmon (v.1.4.0)
+
+### a. Create working dir 
+
+```sh
 source_dir=/public/home/pyhu/project/xjw/immunity_mut_RNA_seq/pyhu_process/3_source/OsativaKitaake
 cdna_ref=$source_dir/annotation/OsativaKitaake_499_v3.1.transcript.fa.gz
 gdna_ref=$source_dir/assembly/OsativaKitaake_499_v3.0.hardmasked.fa.gz
 module load salmon/1.4.0
 out_dir=/public/home/pyhu/project/xjw/immunity_mut_RNA_seq/pyhu_process/0_Results/4_salmon_kitaake
+```
 
-############# [Salmon-1] Prepare transcriptome indices #########
+
+
+### b. [Salmon-1] Prepare transcriptome indices 
+
+```sh
 echo "[1/2] Prepare transcriptome indices (mapping-based mode)" 
 # prepare decoy.txt
 echo "prepare decoy.txt"
@@ -63,8 +83,13 @@ bsub -K -J index -n 2 -R span[hosts=1] -o log/indexkit.out -e log/indexkit.err -
   -d $out_dir/decoys.txt -p 12 \
   -i $out_dir/salmon_index \
   --gencode"
+```
 
-############# [Salmon-2] Quantifying in mapping-based mode #########
+
+
+### c. [Salmon-2] Quantifying in mapping-based mode
+
+```sh
 echo "[2/2] Quantifying in mapping-based mode"
 seq_dir=/public/home/pyhu/project/xjw/immunity_mut_RNA_seq/rawSeq
 
