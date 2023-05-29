@@ -127,3 +127,6 @@ index_cover: /img/view.jpg
 # Social Accounts
 twitter_url: https://twitter.com/dearhupy
 github_url: https://github.com/peiyaohu/peiyaohu.github.io
+
+plugins:
+  - hexo-tag-aplayer
